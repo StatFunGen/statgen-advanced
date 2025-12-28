@@ -1,0 +1,646 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>statgen-advanced &#8212; Statistical genetics methods (version 2025.12)</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'README';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Statistical genetics methods (version 2025.12)</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/README.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>statgen-advanced</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-of-topics">Overview of Topics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theme-1-mapping-of-shared-vs-specific-effects">Theme 1: Mapping of shared vs. specific effects</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theme-2-prediction-with-polygenic-architecture">Theme 2: Prediction with polygenic architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theme-3-causal-chain-from-molecular-phenotype-to-disease">Theme 3: Causal chain from molecular phenotype to disease</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theme-4-generative-models-for-molecular-phenotypes">Theme 4: Generative models for molecular phenotypes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theme-5-scalability-and-computational-approximations">Theme 5: Scalability and computational approximations</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="statgen-advanced">
+<h1>statgen-advanced<a class="headerlink" href="#statgen-advanced" title="Link to this heading">#</a></h1>
+<p>These notes are for trainees with quantitative backgrounds but without formal training in statistical genetics, who have encountered these methods in the literature but have not yet worked with them hands-on. For statisticians wanting to catch up on genetics applications, these notes provide the conceptual foundations and key assumptions that geneticists make when modeling data.</p>
+<p>These notes are not organized by method, by paper, or by software tool. Instead, we organize by scientific question. For each question, we focus on what problem we are trying to solve, what assumptions we are making, and what generative model most naturally describes how the data arise. Once these foundations are clear, existing methods become natural solutions, and their limitations become obvious.</p>
+<p>Think of it like building a Lego model to represent something in the real world. The statistical building blocks (likelihoods, priors, latent variables, hierarchical structures) are the pieces available. Our goal is to focus on designing the blueprint that captures the essential features of the biological reality, while keeping the available blocks in mind. The details of assembling specific kits will inevitably be discussed, but they are not the focus. When one understands what the design requires and what connections matter, one will know how to select and combine blocks to satisfy those requirements. With this foundation, one can read new methods papers and recognize the same underlying ideas, and feel comfortable adapting or extending existing approaches for new problems.</p>
+<p>As an example, consider allele-specific expression (ASE) QTL analysis. Total expression reflects the sum of transcripts from both haplotypes; ASE measures their difference within heterozygotes. The same genetic effect parameter underlies both, appearing as dosage effect <span class="math notranslate nohighlight">\((0, 1, 2)\)</span> in total expression and haplotype difference <span class="math notranslate nohighlight">\((-1, 0, +1)\)</span> in ASE. Because sum and difference are conditionally independent, ASE adds information beyond total expression from the same samples, effectively increasing sample size. The within-individual comparison also cancels individual-level confounders (which affect both haplotypes equally), and the phasing information in ASE provides different correlation patterns than genotype dosage (LD), thus improving fine-mapping resolution. These advantages motivate incorporating ASE into QTL analysis. <a class="reference external" href="https://www.nature.com/articles/ng.3467">RASQUAL</a> implemented a rigorous generative model with Negative Binomial total counts and Beta-Binomial allele-specific counts sharing genetic effect parameters; <a class="reference external" href="https://www.nature.com/articles/s41467-021-21592-8">mixQTL</a> later achieved scalability through Gaussian approximations and <a class="reference external" href="https://github.com/bmvdgeijn/WASP">WASP</a> preprocessing, trading some model fidelity for computational efficiency suitable for large-scale analysis. One can extend this framework further by adding local ancestry modeling or fine-mapping algorithms, following the same approach to motivation and generative modeling.</p>
+<p>These notes assume familiarity with topics in our <a class="reference external" href="https://statfungen.github.io/statgen-primer"><code class="docutils literal notranslate"><span class="pre">statgen-primer</span></code> notes</a>.</p>
+<section id="overview-of-topics">
+<h2>Overview of Topics<a class="headerlink" href="#overview-of-topics" title="Link to this heading">#</a></h2>
+<p>These notes organize into five themes. The first three represent fundamental ways of thinking about genetic data that recur across many applications. The last two address how we adapt our models to specific data types or practical computational constraints. Throughout, the same building blocks (likelihoods, priors, latent variables, effect sharing) appear in different combinations depending on the scientific question.</p>
+<section id="theme-1-mapping-of-shared-vs-specific-effects">
+<h3>Theme 1: Mapping of shared vs. specific effects<a class="headerlink" href="#theme-1-mapping-of-shared-vs-specific-effects" title="Link to this heading">#</a></h3>
+<p>The core question in genetic mapping is: which variants are associated with the trait, and how do effects vary across contexts? We ask these questions whether comparing the same trait across studies (meta-analysis), the same trait across ancestries (cross-ancestry analysis), or different traits at the same locus (colocalization).</p>
+<p>In sum, both genetic effects and confounders can be shared or context-specific. In meta-analysis, we typically assume effects are shared (or allow for heterogeneity) while residuals are study-specific. In cross-ancestry fine-mapping, effects may be shared but LD patterns (a type of confounder) differ by ancestry. In multi-tissue QTL analysis, confounders may be shared across tissues of the same individual donor of biological sample, while effects vary by cell or tissue types.</p>
+<p>Fine-mapping belongs here because LD is simply a particular type of confounding, where correlated variants make it hard to identify causal ones. The challenge is high-dimensional (many correlated variants) and requires variable selection because we don’t know which effects are real. Annotation priors (as in PolyFun) are generative model details that help distinguish confounders from true signals, not a separate concept.</p>
+<p>Note that colocalization asks whether two traits share a causal variant at a locus. This is a mapping question (Theme 1), not a causal inference question (Theme 3). Colocalization results are biologically suggestive of shared mechanism, but the statistical model makes no causal assumptions about one trait affecting another.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Scientific Question</p></th>
+<th class="head"><p>Core Concepts</p></th>
+<th class="head"><p>Methods/Tools</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Which variants are likely causal given LD?</p></td>
+<td><p>Fine-mapping, credible sets, variable selection, functional priors</p></td>
+<td><p>SuSiE, FINEMAP, PolyFun</p></td>
+</tr>
+<tr class="row-odd"><td><p>How do we combine evidence across studies?</p></td>
+<td><p>Effect sharing and heterogeneity, meta-analysis as special case of multivariate modeling</p></td>
+<td><p>METAL, mashr, METASOFT</p></td>
+</tr>
+<tr class="row-even"><td><p>Do two traits share causal variants?</p></td>
+<td><p>Colocalization, shared genetic architecture</p></td>
+<td><p>coloc, ColocBoost, CAFEH</p></td>
+</tr>
+<tr class="row-odd"><td><p>How do we leverage LD diversity across populations?</p></td>
+<td><p>Cross-ancestry fine-mapping, ancestry-specific LD</p></td>
+<td><p>SuSiEx, MESuSiE</p></td>
+</tr>
+<tr class="row-even"><td><p>How do genetic effects vary across contexts?</p></td>
+<td><p>Multi-trait GWAS, multi-context QTL, effect heterogeneity</p></td>
+<td><p>mashr, mtCOJO</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="theme-2-prediction-with-polygenic-architecture">
+<h3>Theme 2: Prediction with polygenic architecture<a class="headerlink" href="#theme-2-prediction-with-polygenic-architecture" title="Link to this heading">#</a></h3>
+<p>Sometimes we don’t care which specific variants are causal. Instead, we want to understand aggregate properties: How much of trait variation is genetic? Which tissues or cell types are enriched? Can we predict phenotype from genotype? This is the polygenic perspective, where the signal that cannot be mapped to individual variants still contributes meaningfully to prediction and biological insight.</p>
+<p>In contrast to theme 1 where fine-mapping asks “which?”, here heritability asks “how much?” PRS asks “what can we predict?”. LDSC leverages LD structure not to identify causal variants but to estimate total heritability and its enrichment across functional categories. The unmappable portion of genetic signal, which would be noise in Theme 1, becomes useful information in Theme 2.</p>
+<p>MAGMA fits here as gene-level aggregation: it tests whether variants near a gene collectively associate with a trait, without invoking causal assumptions about gene expression affecting the trait (that would be Theme 3). Genetic correlation between traits also typically belongs here, as we usually refer to genome-wide correlation computed in a polygenic framework.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Scientific Question</p></th>
+<th class="head"><p>Core Concepts</p></th>
+<th class="head"><p>Methods/Tools</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>How much trait variation is genetic?</p></td>
+<td><p>Heritability, variance components</p></td>
+<td><p>LDSC, GREML, GCTA</p></td>
+</tr>
+<tr class="row-odd"><td><p>Are genetic effects correlated across traits?</p></td>
+<td><p>Genetic correlation, pleiotropy</p></td>
+<td><p>LDSC, Popcorn</p></td>
+</tr>
+<tr class="row-even"><td><p>Which tissues or annotations are enriched?</p></td>
+<td><p>Heritability partitioning, functional enrichment</p></td>
+<td><p>S-LDSC, MAGMA</p></td>
+</tr>
+<tr class="row-odd"><td><p>Can we predict phenotype from genotype?</p></td>
+<td><p>Polygenic risk scores, prediction accuracy</p></td>
+<td><p>LDpred, PRS-CS, PRSice</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="theme-3-causal-chain-from-molecular-phenotype-to-disease">
+<h3>Theme 3: Causal chain from molecular phenotype to disease<a class="headerlink" href="#theme-3-causal-chain-from-molecular-phenotype-to-disease" title="Link to this heading">#</a></h3>
+<p>This theme applies the concepts from Themes 1 and 2 most typically to the relationship between molecular phenotypes and disease, with additional statistical assumptions that enable causal inference. The key distinction is the instrumental variable framework: we use genetic variants as instruments to test whether an exposure (e.g., gene expression) causally affects an outcome (e.g., disease risk).</p>
+<p>It is important to clarify that “causal” here refers to the statistical modeling framework, not biological mechanism. MR and TWAS both rely on instrumental variable assumptions (relevance, independence, exclusion restriction), and all TWAS methods can be viewed as two-sample MR with gene expression as the exposure. The differences are practical (expression prediction, correlated instruments) rather than conceptual. This unification helps tracking what each method assumes and where it might fail, particularly through horizontal pleiotropy. Colocalization, by contrast, asks whether GWAS and QTL share a causal variant but makes no statistical claim about expression causing disease.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Scientific Question</p></th>
+<th class="head"><p>Core Concepts</p></th>
+<th class="head"><p>Methods/Tools</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Does gene expression causally affect disease?</p></td>
+<td><p>TWAS as MR, instrumental variables, predicted expression</p></td>
+<td><p>PrediXcan, FUSION, TWAS-BLUP</p></td>
+</tr>
+<tr class="row-odd"><td><p>Does exposure X cause outcome Y?</p></td>
+<td><p>MR assumptions, horizontal pleiotropy, instrument selection</p></td>
+<td><p>TwoSampleMR, MR-Egger, MR-PRESSO, MRAID</p></td>
+</tr>
+<tr class="row-even"><td><p>Can we distinguish causality from pleiotropy?</p></td>
+<td><p>Horizontal pleiotropy testing, robust MR</p></td>
+<td><p>PMR-Egger, MR-PRESSO</p></td>
+</tr>
+<tr class="row-odd"><td><p>How do we integrate QTL and GWAS evidence for causality?</p></td>
+<td><p>SMR, multi-omics MR</p></td>
+<td><p>SMR, moloc</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="theme-4-generative-models-for-molecular-phenotypes">
+<h3>Theme 4: Generative models for molecular phenotypes<a class="headerlink" href="#theme-4-generative-models-for-molecular-phenotypes" title="Link to this heading">#</a></h3>
+<p>This theme examine specific generative modeling to different molecular data types. Unlike GWAS where the phenotype is relatively simple (a quantitative trait or case-control status), molecular phenotypes have complex data generating processes that we understand from biology. Building generative models that respect these structures can improve power and interpretation.</p>
+<p>This is the Lego analogy in action: we know the biology of RNA-seq count data or bisulfite sequencing, so we can choose distributional assumptions (Negative Binomial, Beta-Binomial) and model structure (haplotype effects, overdispersion) that match reality, followed by tools discussed in previous themes to implement these specific models.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Scientific Question</p></th>
+<th class="head"><p>Core Concepts</p></th>
+<th class="head"><p>Methods/Tools</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>How do we model splicing variation?</p></td>
+<td><p>Junction usage, Dirichlet-Multinomial, intron clusters</p></td>
+<td><p>Leafcutter, sQTLseekeR</p></td>
+</tr>
+<tr class="row-odd"><td><p>How do we model methylation?</p></td>
+<td><p>Beta-distributed outcomes, spatial correlation</p></td>
+<td><p>Specific mQTL pipelines</p></td>
+</tr>
+<tr class="row-even"><td><p>How do we model protein abundance?</p></td>
+<td><p>pQTL mapping, measurement noise, missing data</p></td>
+<td><p>Various pQTL methods</p></td>
+</tr>
+<tr class="row-odd"><td><p>How do we leverage allele-specific information?</p></td>
+<td><p>ASE, haplotype-aware models, conditional independence</p></td>
+<td><p>RASQUAL, mixQTL, WASP</p></td>
+</tr>
+<tr class="row-even"><td><p>How do we handle single-cell QTL?</p></td>
+<td><p>Cell type composition, pseudobulk, mixed effects</p></td>
+<td><p>CellRegMap, pseudobulk approaches</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="theme-5-scalability-and-computational-approximations">
+<h3>Theme 5: Scalability and computational approximations<a class="headerlink" href="#theme-5-scalability-and-computational-approximations" title="Link to this heading">#</a></h3>
+<p>As genetic datasets grow to biobank scale (hundreds of thousands to millions of individuals), statistical methods often become computationally intractable. This theme addresses practical approximations that particularly enable analysis at scale while preserving the core conceptual framework.</p>
+<p>We emphasize tradeoffs to helps practitioners choose appropriate methods between rigorous generative models and scalable approximations.</p>
+<p>Note: Basic linear models, mixed models for relatedness, and population structure correction are covered in <a class="reference external" href="https://statgen.github.io/statgen-primer/">statgen-primer</a>. This course focuses on advanced methods for large-scale data.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Scientific Question</p></th>
+<th class="head"><p>Core Concepts</p></th>
+<th class="head"><p>Methods/Tools</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>How do we run GWAS on biobank-scale data?</p></td>
+<td><p>Scalable mixed models, sparse GRM, approximations</p></td>
+<td><p>BOLT-LMM, SAIGE, REGENIE, fastGWA</p></td>
+</tr>
+<tr class="row-odd"><td><p>How do we trade model fidelity for speed?</p></td>
+<td><p>Gaussian approximations, preprocessing strategies</p></td>
+<td><p>mixQTL vs. RASQUAL, WASP preprocessing</p></td>
+</tr>
+<tr class="row-even"><td><p>How do we work with summary statistics?</p></td>
+<td><p>LD reference panels, avoiding individual-level data</p></td>
+<td><p>Summary-stat-based methods throughout</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils" />
+<p><strong>What is NOT discussed</strong></p>
+<p>These notes focuses on statistical genetics methodology. Several related topics are beyond our current scope:</p>
+<ul class="simple">
+<li><p><em>Variant effect prediction via AI/ML</em>: Methods like AlphaMissense, ESM1b, and Enformer use deep learning to predict variant effects from sequence or structure. While increasingly important, these are machine learning predictions without a strong genetics motivation, and are not covered here.</p></li>
+<li><p><em>Network and pathway analysis</em>: Methods like DEPICT and pathway enrichment focus on biological interpretation downstream of genetic analysis. We focus on the genetic analysis itself.</p></li>
+<li><p><em>Spatial transcriptomics</em>: Unless directly connected to QTL analysis, spatial methods are beyond our scope.</p></li>
+<li><p><em>Rare variant analysis</em>: Burden tests, SKAT, and related methods are well-motivated genetics problems but typically either lack rigorous statistical properties or are methodologically similar to common variant methods without new generative modeling insights. For theoretical discussion of rare vs. common variant disease etiology, readers should refer to population genetics work from Jonathan Pritchard and Guy Sella.</p></li>
+</ul>
+</section>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-of-topics">Overview of Topics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theme-1-mapping-of-shared-vs-specific-effects">Theme 1: Mapping of shared vs. specific effects</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theme-2-prediction-with-polygenic-architecture">Theme 2: Prediction with polygenic architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theme-3-causal-chain-from-molecular-phenotype-to-disease">Theme 3: Causal chain from molecular phenotype to disease</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theme-4-generative-models-for-molecular-phenotypes">Theme 4: Generative models for molecular phenotypes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theme-5-scalability-and-computational-approximations">Theme 5: Scalability and computational approximations</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gao Wang and Rui Dong
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
