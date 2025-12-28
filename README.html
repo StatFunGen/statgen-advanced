@@ -338,16 +338,15 @@ document.write(`
 <p>These notes are for trainees with quantitative backgrounds but without formal training in statistical genetics, who have encountered these methods in the literature but have not yet worked with them hands-on. For statisticians wanting to catch up on genetics applications, these notes provide the conceptual foundations and key assumptions that geneticists make when modeling data.</p>
 <p>These notes are not organized by method, by paper, or by software tool. Instead, we organize by scientific question. For each question, we focus on what problem we are trying to solve, what assumptions we are making, and what generative model most naturally describes how the data arise. Once these foundations are clear, existing methods become natural solutions, and their limitations become obvious.</p>
 <p>Think of it like building a Lego model to represent something in the real world. The statistical building blocks (likelihoods, priors, latent variables, hierarchical structures) are the pieces available. Our goal is to focus on designing the blueprint that captures the essential features of the biological reality, while keeping the available blocks in mind. The details of assembling specific kits will inevitably be discussed, but they are not the focus. When one understands what the design requires and what connections matter, one will know how to select and combine blocks to satisfy those requirements. With this foundation, one can read new methods papers and recognize the same underlying ideas, and feel comfortable adapting or extending existing approaches for new problems.</p>
-<p>As an example, consider allele-specific expression (ASE) QTL analysis. Total expression reflects the sum of transcripts from both haplotypes; ASE measures their difference within heterozygotes. The same genetic effect parameter underlies both, appearing as dosage effect <span class="math notranslate nohighlight">\((0, 1, 2)\)</span> in total expression and haplotype difference <span class="math notranslate nohighlight">\((-1, 0, +1)\)</span> in ASE. Because sum and difference are conditionally independent, ASE adds information beyond total expression from the same samples, effectively increasing sample size. The within-individual comparison also cancels individual-level confounders (which affect both haplotypes equally), and the phasing information in ASE provides different correlation patterns than genotype dosage (LD), thus improving fine-mapping resolution. These advantages motivate incorporating ASE into QTL analysis. <a class="reference external" href="https://www.nature.com/articles/ng.3467">RASQUAL</a> implemented a rigorous generative model with Negative Binomial total counts and Beta-Binomial allele-specific counts sharing genetic effect parameters; <a class="reference external" href="https://www.nature.com/articles/s41467-021-21592-8">mixQTL</a> later achieved scalability through Gaussian approximations and <a class="reference external" href="https://github.com/bmvdgeijn/WASP">WASP</a> preprocessing, trading some model fidelity for computational efficiency suitable for large-scale analysis. One can extend this framework further by adding local ancestry modeling or fine-mapping algorithms, following the same approach to motivation and generative modeling.</p>
-<p>These notes assume familiarity with topics in our <a class="reference external" href="https://statfungen.github.io/statgen-primer"><code class="docutils literal notranslate"><span class="pre">statgen-primer</span></code> notes</a>.</p>
+<p>As an example, consider allele-specific expression (ASE) QTL analysis. Total expression reflects the sum of transcripts from both haplotypes; ASE measures their difference within heterozygotes. The same genetic effect parameter underlies both, appearing as dosage effect <span class="math notranslate nohighlight">\((0, 1, 2)\)</span> in total expression and haplotype difference <span class="math notranslate nohighlight">\((-1, 0, +1)\)</span> in ASE. Because sum and difference are conditionally independent, ASE adds information about genetic effects beyond total expression from the same samples, effectively increasing sample size. The within-individual comparison also cancels individual-level confounders (which affect both haplotypes equally), and haplotype difference in ASE provides different correlation (LD) patterns than conventional genotype dosage, thus improving fine-mapping resolution. These advantages motivate incorporating ASE into QTL analysis. <a class="reference external" href="https://www.nature.com/articles/ng.3467">RASQUAL</a> implemented a rigorous generative model with Negative Binomial total counts and Beta-Binomial allele-specific counts sharing genetic effect parameters; <a class="reference external" href="https://www.nature.com/articles/s41467-021-21592-8">mixQTL</a> later achieved scalability through Gaussian approximations and <a class="reference external" href="https://github.com/bmvdgeijn/WASP">WASP</a> preprocessing, trading some modeling rigor for computational efficiency suitable for large-scale analysis. One can extend this framework further by adding local ancestry modeling and fine-mapping, following the same approach to motivation and generative modeling.</p>
 <section id="overview-of-topics">
 <h2>Overview of Topics<a class="headerlink" href="#overview-of-topics" title="Link to this heading">#</a></h2>
-<p>These notes organize into five themes. The first three represent fundamental ways of thinking about genetic data that recur across many applications. The last two address how we adapt our models to specific data types or practical computational constraints. Throughout, the same building blocks (likelihoods, priors, latent variables, effect sharing) appear in different combinations depending on the scientific question.</p>
+<p>These notes organize into five themes. The first three represent fundamental ways of thinking about genetic data that recur across many applications. The last two address how we adapt our models to specific data types or practical computational constraints. Throughout, the same building blocks, mostly introduced in our <a class="reference external" href="https://statfungen.github.io/statgen-primer">“statgen-primer” notes</a>, appear in different combinations depending on the scientific question.</p>
 <section id="theme-1-mapping-of-shared-vs-specific-effects">
 <h3>Theme 1: Mapping of shared vs. specific effects<a class="headerlink" href="#theme-1-mapping-of-shared-vs-specific-effects" title="Link to this heading">#</a></h3>
 <p>The core question in genetic mapping is: which variants are associated with the trait, and how do effects vary across contexts? We ask these questions whether comparing the same trait across studies (meta-analysis), the same trait across ancestries (cross-ancestry analysis), or different traits at the same locus (colocalization).</p>
-<p>In sum, both genetic effects and confounders can be shared or context-specific. In meta-analysis, we typically assume effects are shared (or allow for heterogeneity) while residuals are study-specific. In cross-ancestry fine-mapping, effects may be shared but LD patterns (a type of confounder) differ by ancestry. In multi-tissue QTL analysis, confounders may be shared across tissues of the same individual donor of biological sample, while effects vary by cell or tissue types.</p>
-<p>Fine-mapping belongs here because LD is simply a particular type of confounding, where correlated variants make it hard to identify causal ones. The challenge is high-dimensional (many correlated variants) and requires variable selection because we don’t know which effects are real. Annotation priors (as in PolyFun) are generative model details that help distinguish confounders from true signals, not a separate concept.</p>
+<p>In sum, both genetic effects and confounders can be shared or context-specific. In meta-analysis, we typically assume effects are shared (or allow for heterogeneity) while residuals are study-specific. In cross-ancestry fine-mapping, effects may be shared but LD patterns (a type of confounder) differ by ancestry. In multi-tissue QTL analysis, confounders may be shared across tissues belonging to the same biological sample donor, while effects vary by cell or tissue types even within the same donor.</p>
+<p>Fine-mapping is discussed here because LD is simply a particular type of confounding, where correlated variants make it hard to identify causal ones. The challenge is high-dimensional (many correlated variants) and requires variable selection because we don’t know which effects are real. Annotation priors for fine-mapping are generative model details that help distinguish confounders from true signals, not a separate concept.</p>
 <p>Note that colocalization asks whether two traits share a causal variant at a locus. This is a mapping question (Theme 1), not a causal inference question (Theme 3). Colocalization results are biologically suggestive of shared mechanism, but the statistical model makes no causal assumptions about one trait affecting another.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -363,19 +362,19 @@ document.write(`
 </tr>
 <tr class="row-odd"><td><p>How do we combine evidence across studies?</p></td>
 <td><p>Effect sharing and heterogeneity, meta-analysis as special case of multivariate modeling</p></td>
-<td><p>METAL, mashr, METASOFT</p></td>
+<td><p>METAL, METASOFT, mtag, mashr</p></td>
 </tr>
 <tr class="row-even"><td><p>Do two traits share causal variants?</p></td>
 <td><p>Colocalization, shared genetic architecture</p></td>
-<td><p>coloc, ColocBoost, CAFEH</p></td>
+<td><p>coloc, SuSiE-coloc, ColocBoost</p></td>
 </tr>
 <tr class="row-odd"><td><p>How do we leverage LD diversity across populations?</p></td>
 <td><p>Cross-ancestry fine-mapping, ancestry-specific LD</p></td>
-<td><p>SuSiEx, MESuSiE</p></td>
+<td><p>SuSiEx, MESuSiE, MultiSuSiE, SuShiE</p></td>
 </tr>
 <tr class="row-even"><td><p>How do genetic effects vary across contexts?</p></td>
 <td><p>Multi-trait GWAS, multi-context QTL, effect heterogeneity</p></td>
-<td><p>mashr, mtCOJO</p></td>
+<td><p>mtCOJO, mvSuSiE</p></td>
 </tr>
 </tbody>
 </table>
@@ -396,19 +395,19 @@ document.write(`
 <tbody>
 <tr class="row-even"><td><p>How much trait variation is genetic?</p></td>
 <td><p>Heritability, variance components</p></td>
-<td><p>LDSC, GREML, GCTA</p></td>
+<td><p>GREML, GCTA, LDSC, HESS, LDAK, HDL</p></td>
 </tr>
 <tr class="row-odd"><td><p>Are genetic effects correlated across traits?</p></td>
 <td><p>Genetic correlation, pleiotropy</p></td>
-<td><p>LDSC, Popcorn</p></td>
+<td><p>bi-LDSC, Popcorn, HESS</p></td>
 </tr>
 <tr class="row-even"><td><p>Which tissues or annotations are enriched?</p></td>
 <td><p>Heritability partitioning, functional enrichment</p></td>
-<td><p>S-LDSC, MAGMA</p></td>
+<td><p>S-LDSC</p></td>
 </tr>
 <tr class="row-odd"><td><p>Can we predict phenotype from genotype?</p></td>
 <td><p>Polygenic risk scores, prediction accuracy</p></td>
-<td><p>LDpred, PRS-CS, PRSice</p></td>
+<td><p>PRSice, LDpred, PRS-CS, PRS-CSx</p></td>
 </tr>
 </tbody>
 </table>
@@ -428,7 +427,7 @@ document.write(`
 <tbody>
 <tr class="row-even"><td><p>Does gene expression causally affect disease?</p></td>
 <td><p>TWAS as MR, instrumental variables, predicted expression</p></td>
-<td><p>PrediXcan, FUSION, TWAS-BLUP</p></td>
+<td><p>PrediXcan, FUSION, MultiXcan, mr.mash, CoMM, cTWAS</p></td>
 </tr>
 <tr class="row-odd"><td><p>Does exposure X cause outcome Y?</p></td>
 <td><p>MR assumptions, horizontal pleiotropy, instrument selection</p></td>
@@ -436,11 +435,11 @@ document.write(`
 </tr>
 <tr class="row-even"><td><p>Can we distinguish causality from pleiotropy?</p></td>
 <td><p>Horizontal pleiotropy testing, robust MR</p></td>
-<td><p>PMR-Egger, MR-PRESSO</p></td>
+<td><p>PMR-Egger, CAUSE</p></td>
 </tr>
 <tr class="row-odd"><td><p>How do we integrate QTL and GWAS evidence for causality?</p></td>
-<td><p>SMR, multi-omics MR</p></td>
-<td><p>SMR, moloc</p></td>
+<td><p>multi-omics MR</p></td>
+<td><p>SMR, …</p></td>
 </tr>
 </tbody>
 </table>
@@ -460,15 +459,15 @@ document.write(`
 <tbody>
 <tr class="row-even"><td><p>How do we model splicing variation?</p></td>
 <td><p>Junction usage, Dirichlet-Multinomial, intron clusters</p></td>
-<td><p>Leafcutter, sQTLseekeR</p></td>
+<td><p>Leafcutter, sQTLseekeR, ISSAC</p></td>
 </tr>
 <tr class="row-odd"><td><p>How do we model methylation?</p></td>
 <td><p>Beta-distributed outcomes, spatial correlation</p></td>
-<td><p>Specific mQTL pipelines</p></td>
+<td><p>smash, fSuSiE</p></td>
 </tr>
 <tr class="row-even"><td><p>How do we model protein abundance?</p></td>
 <td><p>pQTL mapping, measurement noise, missing data</p></td>
-<td><p>Various pQTL methods</p></td>
+<td><p>…</p></td>
 </tr>
 <tr class="row-odd"><td><p>How do we leverage allele-specific information?</p></td>
 <td><p>ASE, haplotype-aware models, conditional independence</p></td>
@@ -476,7 +475,7 @@ document.write(`
 </tr>
 <tr class="row-even"><td><p>How do we handle single-cell QTL?</p></td>
 <td><p>Cell type composition, pseudobulk, mixed effects</p></td>
-<td><p>CellRegMap, pseudobulk approaches</p></td>
+<td><p>…</p></td>
 </tr>
 </tbody>
 </table>
@@ -499,11 +498,7 @@ document.write(`
 <td><p>Scalable mixed models, sparse GRM, approximations</p></td>
 <td><p>BOLT-LMM, SAIGE, REGENIE, fastGWA</p></td>
 </tr>
-<tr class="row-odd"><td><p>How do we trade model fidelity for speed?</p></td>
-<td><p>Gaussian approximations, preprocessing strategies</p></td>
-<td><p>mixQTL vs. RASQUAL, WASP preprocessing</p></td>
-</tr>
-<tr class="row-even"><td><p>How do we work with summary statistics?</p></td>
+<tr class="row-odd"><td><p>How do we work with summary statistics?</p></td>
 <td><p>LD reference panels, avoiding individual-level data</p></td>
 <td><p>Summary-stat-based methods throughout</p></td>
 </tr>
