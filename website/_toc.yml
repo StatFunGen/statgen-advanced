@@ -1,0 +1,44 @@
+# Table of contents
+format: jb-book
+root: README
+parts:
+  - caption: Getting Started
+    chapters:
+      - file: notations
+      - file: popular_topics
+
+  - caption: "Mapping"
+    chapters:
+      - file: fine_mapping
+      - file: meta_analysis_advanced
+      - file: colocalization
+      - file: cross_ancestry_fine_mapping
+      - file: multi_context_QTL
+
+  - caption: "Prediction"
+    chapters:
+      - file: heritability
+      - file: genetic_correlation
+      - file: heritability_partitioning
+      - file: polygenic_risk_scores
+
+  - caption: "Causal Chain"
+    chapters:
+      - file: mendelian_randomization
+      - file: twas
+      - file: horizontal_pleiotropy
+      - file: smr
+
+  - caption: "Generative Models for Molecular Phenotypes"
+    chapters:
+      - file: splicing_QTL
+      - file: methylation_QTL
+      - file: protein_QTL
+      - file: allele_specific_expression
+      - file: single_cell_QTL
+
+  - caption: "Scalability and Computational Approximations"
+    chapters:
+      - file: scalable_mixed_models
+      - file: model_approximations
+      - file: summary_statistics_methods

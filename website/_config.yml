@@ -1,0 +1,25 @@
+# Book settings
+title: Statistical genetics methods (version 2025.12)
+author: Gao Wang and Rui Dong
+logo: logo.png  # Add a logo file to your repo if you have one
+copyright: "2026"
+execute:
+  execute_notebooks: false
+latex:
+  latex_documents:
+    targetname: book.tex
+bibtex_bibfiles:
+  - references.bib
+repository:
+  url: https://github.com/statfungen/statgen-advanced
+  path_to_book: ""
+  branch: main
+html:
+  use_issues_button: true
+  use_repository_button: true
+  use_edit_page_button: true
+# Add navigation depth configuration to show one level expanded by default
+sphinx:
+  config:
+    html_theme_options:
+      show_navbar_depth: 2
