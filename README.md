@@ -10,7 +10,13 @@ As an example, consider allele-specific expression (ASE) QTL analysis. Total exp
 
 ## Overview of Topics
 
-These notes organize into five themes. The first three represent fundamental ways of thinking about genetic data that recur across many applications. The last two address how we adapt our models to specific data types or practical computational constraints. Throughout, the same building blocks, mostly introduced in our ["statgen-primer" notes](https://statfungen.github.io/statgen-primer), appear in different combinations depending on the scientific question.
+These notes organize into five themes. 
+
+The first three themes represent our understanding of how genetic association relates to biological questions. When studying genetic associations, we fundamentally care about two things: mapping specific effects to variants or contexts (Theme 1) or predicting aggregate outcomes from polygenic architecture (Theme 2). Theme 3 takes both perspectives further by adding causal inference: we can ask mapping questions (which gene's expression causes disease?) or prediction questions (can we predict disease risk through genetically predicted expression?). Causality is necessarily narrower than association—it requires stronger assumptions—but builds on the same conceptual foundations. 
+
+The last two address how we adapt our models to specific data types or practical computational constraints. Theme 4 examines how biological data-generating processes inform model design. Unlike simple GWAS phenotypes, molecular data (RNA-seq counts, methylation proportions, splicing ratios) arise from well-understood biological mechanisms that suggest specific distributional choices and model structures. Theme 5 addresses strategic simplification of rigorous generative models for computational tractability. 
+
+Throughout, the same building blocks, mostly introduced in our ["statgen-primer" notes](https://statfungen.github.io/statgen-primer), appear in different combinations depending on the scientific question.
 
 ### Theme 1: Mapping of shared vs. specific effects
 
@@ -55,8 +61,10 @@ It is important to clarify that "causal" here refers to the statistical modeling
 |---------------------|---------------|---------------|
 | Does gene expression causally affect disease? | TWAS as MR, instrumental variables, predicted expression | PrediXcan, FUSION, MultiXcan, mr.mash, CoMM, cTWAS |
 | Does exposure X cause outcome Y? | MR assumptions, horizontal pleiotropy, instrument selection | TwoSampleMR, MR-Egger, MR-PRESSO, MRAID |
+| Which among multiple correlated exposures is the driver? | Multivariate MR (MVMR), direct vs. indirect effects, pleiotropy correction | MVMR-Egger, MVMR-cML, GRAPPLE, Cis-MRBEE|
 | Can we distinguish causality from pleiotropy? | Horizontal pleiotropy testing, robust MR | PMR-Egger, CAUSE |
 | How do we integrate QTL and GWAS evidence for causality? | multi-omics MR | SMR, ... |
+
 
 ### Theme 4: Generative models for molecular phenotypes
 
@@ -74,7 +82,9 @@ This is the Lego analogy in action: we know the biology of RNA-seq count data or
 
 ### Theme 5: Scalability and computational approximations
 
-As genetic datasets grow to biobank scale (hundreds of thousands to millions of individuals), statistical methods often become computationally intractable. This theme addresses practical approximations that particularly enable analysis at scale while preserving the core conceptual framework.
+
+
+Themes 1-4 emphasize building full generative models that capture biological reality. These models are conceptually complete but often computationally intractable at biobank scale. As genetic datasets grow (hundreds of thousands to millions of individuals), statistical methods often become computationally intractable. Theme 5 addresses how we strategically simplify these generative models through approximations that preserve core conceptual framework while enabling computation. The key is understanding what we're dropping and why it still works.
 
 We emphasize tradeoffs to helps practitioners choose appropriate methods between rigorous generative models and scalable approximations.
 
